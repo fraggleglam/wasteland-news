@@ -5,7 +5,7 @@ const cheerio = require('cheerio');
 require('dotenv').config();
 
 const app = express();
-const PORT = process.env.PORT || 3002;
+const PORT = process.env.PORT;
 
 // API Keys with rotation
 const NEWS_API_KEYS = [
