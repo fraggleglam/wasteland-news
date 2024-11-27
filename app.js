@@ -1,4 +1,4 @@
-const BASE_URL = 'http://localhost:3002/api';
+const BASE_URL = '/api';
 let currentCategory = 'general';
 let lastRefreshTime = 0;
 let pullStartY = 0;
@@ -49,19 +49,27 @@ async function initializeCategories() {
         const response = await fetch(`${BASE_URL}/categories`);
         const data = await response.json();
         
-        // Add the rest of the categories
-        categoriesContainer.innerHTML += data.data.map(category => `
-            <button 
-                class="category-button ${category === currentCategory ? 'active' : ''}" 
-                data-category="${category}"
-                onclick="switchCategory('${category}')"
-            >
-                ${category.charAt(0).toUpperCase() + category.slice(1)}
-            </button>
-        `).join('');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
         
-        // Fetch initial news
-        await fetchNews(currentCategory);
+        if (data.status === 'success') {
+            // Add the rest of the categories
+            categoriesContainer.innerHTML += data.data.map(category => `
+                <button 
+                    class="category-button ${category === currentCategory ? 'active' : ''}" 
+                    data-category="${category}"
+                    onclick="switchCategory('${category}')"
+                >
+                    ${category.charAt(0).toUpperCase() + category.slice(1)}
+                </button>
+            `).join('');
+            
+            // Fetch initial news
+            await fetchNews(currentCategory);
+        } else {
+            throw new Error('Failed to fetch categories');
+        }
     } catch (error) {
         console.error('Error initializing categories:', error);
         showError('Failed to load categories');
@@ -127,20 +135,24 @@ async function fetchNews(category = currentCategory, forceRefresh = false) {
         const data = await response.json();
         
         if (!response.ok) {
-            throw new Error(data.error || 'Failed to fetch news');
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
-
-        // Store current articles for search filtering
-        currentArticles = data.data;
-        filteredArticles = currentArticles;
-        filterArticles(); // Apply any existing filters
         
-        // Sort articles by publishedAt in descending order
-        const sortedArticles = [...currentArticles].sort((a, b) => 
-            new Date(b.published_at) - new Date(a.published_at)
-        );
-        
-        displayNews(sortedArticles);
+        if (data.status === 'success') {
+            // Store current articles for search filtering
+            currentArticles = data.data;
+            filteredArticles = currentArticles;
+            filterArticles(); // Apply any existing filters
+            
+            // Sort articles by publishedAt in descending order
+            const sortedArticles = [...currentArticles].sort((a, b) => 
+                new Date(b.published_at) - new Date(a.published_at)
+            );
+            
+            displayNews(sortedArticles);
+        } else {
+            throw new Error('Failed to fetch news');
+        }
     } catch (error) {
         console.error('Error fetching news:', error);
         showError(error.message);
