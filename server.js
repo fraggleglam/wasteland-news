@@ -7,6 +7,17 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT;
 
+// CORS configuration
+const corsOptions = {
+    origin: ['https://wasteland-news.onrender.com', 'http://localhost:3002'],
+    methods: ['GET', 'POST'],
+    credentials: true
+};
+
+app.use(cors(corsOptions));
+app.use(express.json());
+app.use(express.static('.'));
+
 // API Keys with rotation
 const NEWS_API_KEYS = [
     process.env.NEWS_API_KEY_1,
@@ -45,10 +56,6 @@ const CATEGORIES = {
     space: 'space exploration OR NASA OR SpaceX OR astronomy',
     politics: 'politics OR government OR election'
 };
-
-app.use(cors());
-app.use(express.json());
-app.use(express.static('.'));
 
 // Get categories
 app.get('/api/categories', (req, res) => {
