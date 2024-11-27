@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wasteland News</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chelsea+Market&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="pull-to-refresh">
+            <div class="spinner"></div>
+        </div>
+        <header class="header">
+            <div class="app-title">
+                <h1>WASTELAND NEWS</h1>
+                <p>[always a day late]</p>
+            </div>
+            <div class="header-controls">
+                <div class="top-bar">
+                    <div class="search-filter-container">
+                        <div class="search-container">
+                            <input type="text" id="news-search" placeholder="Search news...">
+                            <button id="news-search-button">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="filter-container">
+                            <button id="filter-button" class="filter-button">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                                </svg>
+                                <span>Filter</span>
+                            </button>
+                            <div id="filter-dropdown" class="filter-dropdown">
+                                <div class="filter-input-container">
+                                    <input type="text" id="filter-input" placeholder="Type topics to exclude (press Enter)">
+                                    <div class="filter-hint">Separate multiple topics with Enter</div>
+                                </div>
+                                <div id="active-filters" class="active-filters">
+                                    <!-- Filter tags will be added here dynamically -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="categories-scroll">
+                    <div id="categories-container" class="categories"></div>
+                </div>
+            </div>
+        </header>
+
+        <div id="error" class="error"></div>
+        
+        <div id="news-container"></div>
+
+        <div id="filter-tags" class="filter-tags">
+            <!-- Active filter tags will be shown here -->
+        </div>
+
+        <div id="article-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="close-button" onclick="closeArticle()">&times;</button>
+                </div>
+                <div id="modal-body" class="modal-body"></div>
+            </div>
+        </div>
+
+        <div id="article-page" class="article-page">
+            <div class="article-header">
+                <button class="back-button" onclick="closeArticlePage()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="19" y1="12" x2="5" y2="12"></line>
+                        <polyline points="12 19 5 12 12 5"></polyline>
+                    </svg>
+                </button>
+                <button class="bookmark-button" onclick="toggleBookmark(event)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                </button>
+            </div>
+            <div id="article-content"></div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
